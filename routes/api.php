@@ -19,4 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::resource('timeout','TimeoutController');
-Route::post('slowdown_pmax', 'TimeoutController@slowdownPmax');
+Route::any('slowdown_pmax', 'TimeoutController@slowdownPmax');

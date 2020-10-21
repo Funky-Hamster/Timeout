@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RemoveVolumeParam extends Model
+class VolumeIdentifier extends Model
 {
-
+    //
 }
