@@ -6,6 +6,7 @@ use App\AddVolumeParam;
 use App\VolumeAttribute;
 use App\IAPIConnection;
 use Illuminate\Http\Request;
+use Symfony\Component\Process\Process;
 
 class TimeoutController extends Controller
 {
@@ -41,10 +42,10 @@ class TimeoutController extends Controller
         );
     }
 
-    public function slowdownPmax(Request $request)
+    public function slowdownPmax()
     {
-        $volumeAttribute = new VolumeAttribute('MB', 10);
-        $addVolumeParam = new AddVolumeParam(30, 'FBA', $volumeAttribute, true);
+        $volumeAttribute = new VolumeAttribute('GB', 10);
+        $addVolumeParam = new AddVolumeParam(100, 'FBA', $volumeAttribute, true);
         $expandStorageGroupParam = array(
             'addVolumeParam' => array(
                 'num_of_vols' => $addVolumeParam->num_of_vols,
@@ -67,7 +68,34 @@ class TimeoutController extends Controller
             'editStorageGroupActionParam' => $editStorageGroupActionParam
         );
         $conn = new IAPIConnection();
-        $url = $conn->getConnectionURL() . '/sloprovisioning/symmetrix/000197802517/storagegroup/DanielTestChildGroup';
-        return $conn->PUT($url, $postBody);
+        $createVolsUrl = $conn->getConnectionURL() . '/sloprovisioning/symmetrix/000197802517/storagegroup/DanielTestChildGroup';
+        $conn->PUT($createVolsUrl, $postBody);
+        $getVolsUrl = $conn->getConnectionURL() . '/sloprovisioning/symmetrix/000197802517/volume?storageGroupId=DanielTestChildGroup';
+        $vols = $conn->GET($getVolsUrl, $postBody)['resultList']['result'];
+
+        $volArray = array();
+        foreach ($vols as $vol) {
+            try {
+                array_push($volArray, $vol['volumeId']);
+            }
+            catch(\Exception $e) {
+                continue;
+            }
+        }
+        $editStorageGroupActionParam = array(
+            'removeVolumeParam' => array(
+                'volumeId' => $volArray,
+            )
+        );
+        $postBody = array(
+            'editStorageGroupActionParam' => $editStorageGroupActionParam
+        );
+        return $conn->PUT($createVolsUrl, $postBody);
+    }
+
+    public function multipleCreation(Request $request) {
+        for ($i = 0; $i < 3; $i++) {
+            $this->slowdownPmax();
+        }
     }
 }

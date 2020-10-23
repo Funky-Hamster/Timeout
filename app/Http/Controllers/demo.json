@@ -1,38 +1,21 @@
 {
-    "editStorageGroupActionParam": {
-        "expandStorageGroupParam": {
-            "addVolumeParam": {
-                "num_of_vols": 1,
-                "emulation": "FBA",
-                "volumeAttribute": {
-                    "capacityUnit": "GB",
-                    "volume_size": 1.0
-                },
-                "volumeIdentifier": {
-                    "volumeIdentifierChoice": "identifier_name",
-                    "identifier_name": ""
-                },
-                "create_new_volumes": true
-            }
-        }
-    }
-}
-{
-    "editStorageGroupActionParam": {
-        "expandStorageGroupParam": {
-            "addVolumeParam": {
-                "num_of_vols": 3,
-                "emulation": "FBA",
-                "volumeAttribute": {
-                    "capacityUnit": "MB",
-                    "volume_size": 10
-                },
-                "volumeIdentifier": {
-                    "volumeIdentifierChoice": "identifier_name",
-                    "identifier_name": ""
-                },
-                "create_new_volumes": true
-            }
-        }
-    }
+    "storageGroupId": "DanielTestChildGroup",
+    "slo": "NONE",
+    "srp": "SRP_1",
+    "slo_compliance": "NONE",
+    "num_of_vols": 102,
+    "num_of_child_sgs": 0,
+    "num_of_parent_sgs": 1,
+    "num_of_masking_views": 0,
+    "num_of_snapshots": 0,
+    "cap_gb": 1.1,
+    "device_emulation": "FBA",
+    "type": "Child",
+    "unprotected": true,
+    "parent_storage_group": [
+        "DanielTestSGroup_new"
+    ],
+    "compression": true,
+    "VPSaved": "100.0%",
+    "vp_saved_percent": 100
 }

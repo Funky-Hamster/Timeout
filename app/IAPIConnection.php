@@ -12,6 +12,13 @@ const PASSWORD = 'smc';
 
 class IAPIConnection
 {
+    private $headers = array(
+        'content-type' => 'application/json',
+        'X-EMC-REST-CLIENT' => true,
+        'Accept' => 'application/json',
+        'Application-Type' => 'VRO_V1.2'
+    );
+
     public function getConnectionURL()
     {
         return 'https://' . HOST . ':' . PORT . '/univmax/restapi/90';
@@ -20,7 +27,7 @@ class IAPIConnection
     public function GET($url)
     {
         $http = new Client();
-        $response = $http->get($url, ['auth' => [USERNAME, PASSWORD]]);
+        $response = $http->get($url, ['auth' => [USERNAME, PASSWORD], 'headers' => $this->headers, 'verify' => false]);
         $resStr = $response->getBody()->__toString();
         return \json_decode($resStr, true);
     }
@@ -28,7 +35,7 @@ class IAPIConnection
     public function POST($url, $body)
     {
         $http = new Client();
-        $response = $http->post($url, ['auth' => [USERNAME, PASSWORD], 'form_params' => $body]);
+        $response = $http->post($url, ['auth' => [USERNAME, PASSWORD], RequestOptions::JSON => $body]);
         return $response;
         $resStr = $response->getBody()->__toString();
         return \json_decode($resStr, true);
@@ -37,13 +44,7 @@ class IAPIConnection
     public function PUT($url, $body)
     {
         $http = new Client();
-        $headers = array(
-            'content-type' => 'application/json',
-            'X-EMC-REST-CLIENT' => true,
-            'Accept' => 'application/json',
-            'Application-Type' => 'VRO_V1.2'
-        );
-        $response = $http->put($url, ['auth' => [USERNAME, PASSWORD], RequestOptions::JSON => $body, 'headers' => $headers, 'verify' => false]);
+        $response = $http->put($url, ['auth' => [USERNAME, PASSWORD], RequestOptions::JSON => $body, 'headers' => $this->headers, 'verify' => false]);
         $resStr = $response->getBody()->__toString();
         return \json_decode($resStr, true);
     }
@@ -51,7 +52,7 @@ class IAPIConnection
     public function DELETE($url)
     {
         $http = new Client();
-        $response = $http->delete($url, ['auth' => [USERNAME, PASSWORD], 'verify' => false]);
+        $response = $http->delete($url, ['auth' => [USERNAME, PASSWORD], 'headers' => $this->headers, 'verify' => false]);
         return $response->getStatusCode();
     }
 }
